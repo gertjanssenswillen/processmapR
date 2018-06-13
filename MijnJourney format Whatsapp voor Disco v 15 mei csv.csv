@@ -1,0 +1,77 @@
+Voornaam;Timestamp;Mapping;Waardering
+Jorgen Klaver;15-5-2018 06:20;Opstaan;1
+Jorgen Klaver;15-5-2018 06:21;Douchen;5
+Jorgen Klaver;15-5-2018 06:25;Aankleden;2
+Jorgen Klaver;15-5-2018 06:30;Ontbijten;3
+Jorgen Klaver;15-5-2018 07:00;Vertrek van thuis/werk;1
+Jorgen Klaver;15-5-2018 08:40;Aankomst station/parkeerterrein;4
+Jorgen Klaver;15-5-2018 08:45;Koffie;4
+Jorgen Klaver;15-5-2018 09:00;Binnen in de zaal;5
+Marlijn Oosterhof ;15-5-2018 05:45;Wakker;1
+Marlijn Oosterhof ;15-5-2018 06:45;Ontbijten;4
+Marlijn Oosterhof ;15-5-2018 07:00;Koffie;5
+Marlijn Oosterhof ;15-5-2018 07:30;V naar kdv;5
+Marlijn Oosterhof ;15-5-2018 08:00;A thuis;4
+Marlijn Oosterhof ;15-5-2018 08:35;Vertrek van thuis/werk;1
+Marlijn Oosterhof ;15-5-2018 09:15;Binnen in de zaal;4
+Daniëlle de Groot ;15-5-2018 06:15;Douchen;5
+Daniëlle de Groot ;15-5-2018 07:00;Ontbijten in combinatie;4
+Daniëlle de Groot ;15-5-2018 08:00;Telefonisch overleg met;5
+Daniëlle de Groot ;15-5-2018 08:30;Uur naar locatie;4
+Daniëlle de Groot ;15-5-2018 09:00;Uur aangekomen op;5
+Daniëlle de Groot ;15-5-2018 09:15;Uur thee gedronken;5
+Petra van Driel ;15-5-2018 07:00;Koffie;5
+Petra van Driel ;15-5-2018 07:15;onbekende activiteit;1
+Petra van Driel ;15-5-2018 08:10;Vertrek van thuis/werk;3
+Petra van Driel ;15-5-2018 08:50;Aankomst station/parkeerterrein;2
+Petra van Driel ;15-5-2018 09:00;Binnen in de zaal;5
+Petra van Driel ;15-5-2018 09:05;Koffie;4
+Roelof Hofma;15-5-2018 06:30;Opstaan;2
+Roelof Hofma;15-5-2018 06:40;Ontbijten;3
+Roelof Hofma;15-5-2018 06:40;Koffie;5
+Roelof Hofma;15-5-2018 07:00;V Drachten;4
+Roelof Hofma;15-5-2018 09:05;A Zeist;5
+Roelof Hofma;15-5-2018 09:10;Binnen in de zaal;5
+Roelof Hofma;15-5-2018 09:15;Koffie;5
+Rob van den Aker;15-5-2018 06:50;Ontbijten;3
+Rob van den Aker;15-5-2018 06:55;Koffie;4
+Rob van den Aker;15-5-2018 07:00;Vertrek van thuis/werk;3
+Rob van den Aker;15-5-2018 07:30;Filerijden;1
+Rob van den Aker;15-5-2018 08:40;Aankomst station/parkeerterrein;3
+Rob van den Aker;15-5-2018 08:45;Binnen in de zaal;4
+Rob van den Aker;15-5-2018 08:55;Koffie;4
+Jos Engels;15-5-2018 08:15;Overnacht Utrecht;4
+Jos Engels;15-5-2018 08:30;Koffie;4
+Jos Engels;15-5-2018 08:30;Koffie;4
+Jos Engels;15-5-2018 08:35;Vertrek van thuis/werk;4
+Jos Engels;15-5-2018 09:05;Aankomst station/parkeerterrein;3
+Jos Engels;15-5-2018 09:07;Gelopen naar Broederplein;5
+Jos Engels;15-5-2018 09:15;Aankomst station/parkeerterrein;5
+Jos Engels;15-5-2018 09:16;Binnen in de zaal;5
+Jos Engels;15-5-2018 09:17;Koffie;5
+Guido Verbaal;15-5-2018 06:30;Borr uit bed;5
+Guido Verbaal;15-5-2018 06:45;Douchen;3
+Guido Verbaal;15-5-2018 07:00;Dex uit bed;5
+Guido Verbaal;15-5-2018 07:30;Ontbijten;4
+Guido Verbaal;15-5-2018 07:50;Vertrek naar station;3
+Guido Verbaal;15-5-2018 08:10;Koffie op station;4
+Guido Verbaal;15-5-2018 08:15;Trein naar Zeist;1
+Guido Verbaal;15-5-2018 08:45;Aankomst station;3
+Guido Verbaal;15-5-2018 09:05;Binnen in zaal;4
+Nicole Megens;15-5-2018 06:30;Opstaan;3
+Nicole Megens;15-5-2018 07:00;Ontbijten;4
+Nicole Megens;15-5-2018 07:15;Vertrek van thuis/werk;3
+Nicole Megens;15-5-2018 07:45;Aankomst station/parkeerterrein;2
+Nicole Megens;15-5-2018 07:55;Binnen in de zaal;5
+Nicole Megens;15-5-2018 07:00;Onderweg;5
+Nicole Megens;15-5-2018 07:30;Thuis ontbijt;4
+Nicole Megens;15-5-2018 08:00;Fietsen naar Adam;4
+Nicole Megens;15-5-2018 08:26;Van Adam naar;4
+Nicole Megens;15-5-2018 08:59;Van Utrecht naar;2
+Nicole Megens;15-5-2018 09:26;Koffie;4
+Rob Extercatte;15-5-2018 05:45;Opstaan;3
+Rob Extercatte;15-5-2018 06:00;Koffie;3
+Rob Extercatte;15-5-2018 06:16;Vertrek van thuis/werk;4
+Rob Extercatte;15-5-2018 06:17;Autoreis;1
+Rob Extercatte;15-5-2018 09:15;Aankomst station/parkeerterrein;5
+Rob Extercatte;15-5-2018 09:25;Binnen in de zaal;5

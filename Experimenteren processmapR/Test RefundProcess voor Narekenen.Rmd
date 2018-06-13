@@ -18,7 +18,7 @@ library(DiagrammeR)
 library(data.table)
 #library(DiagrammeRsvg)
 
-csvLog<-read.table("../RefundProcessVoorNarekenen.csv",header = TRUE, sep = ";",na = c("n.v.t.","onbekend"))
+csvLog<-read.table("W:/Uitbreiden_ProcessMap/RefundProcessVoorNarekenen.csv",header = TRUE, sep = ";",na = c("n.v.t.","onbekend"))
 csvLog$status = "complete"
 csvLog$activity_instance = 1:nrow(csvLog)
 csvLog$startmoment<-as.POSIXct(strptime(csvLog$startmoment, "%d-%m-%Y  %H:%M"))
@@ -110,10 +110,10 @@ map <- map %>%
 
 ```{r}
 map  %>%
-    export_graph(file_name = "Z:/Dump/Map met performance.svg",  file_type = "SVG")
+    export_graph(file_name = "Z:/Dump/Map met performance1.svg",  file_type = "SVG")
 
 ```
-![](`r "Z:/Dump/Map met performance.svg"`)
+![](`r "Z:/Dump/Map met performance1.svg"`)
 
 # Map met aggregate en perf
 ```{r}
@@ -186,9 +186,9 @@ map <- map %>%
 
 ```{r}
 map  %>%
-    export_graph(file_name = "Z:/Dump/Map met xxx2.svg",  file_type = "SVG")
+    export_graph(file_name = "Z:/Dump/Map met xxx22.svg",  file_type = "SVG")
 ```
-![](`r "Z:/Dump/Map met xxx2.svg"`)
+![](`r "Z:/Dump/Map met xxx22.svg"`)
 
 # xxx1xxx2activiteit
 ```{r}

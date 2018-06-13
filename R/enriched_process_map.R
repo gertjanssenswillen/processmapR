@@ -22,19 +22,19 @@ CreateBaseLog<-function(eventlog){
                            aid = !!activity_instance_id_(eventlog),
                            case = !!case_id_(eventlog),
                            time = !!timestamp_(eventlog))
-        
+
     base_log <- tempEventLog %>%
                 as.data.table() %>%
                 group_by(act, aid, case) %>%
                 summarize(start_time = min(time),
                           end_time = max(time))
-    
+
     tempEventLogAdditionalAttributes <- tempEventLog[!duplicated(
                                         select(tempEventLog,act,aid,case))
                                         ,]
-    
+
     base_log <-  inner_join(base_log,tempEventLogAdditionalAttributes)
-    
+
 
     base_log  %>%
         bind_rows(GetEndPoints(baseLog = base_log)) -> base_log
@@ -79,15 +79,15 @@ edges_performance <- function(precedence, aggregationInstructions, edges) {
     temp <- precedence %>%
         ungroup() %>%
         mutate(time = case_when(flow_time == "inter_start_time" ~ as.double(next_start_time - start_time, units = attr(aggregationInstructions, "units")),
-                                flow_time == "idle_time" ~ as.double(next_start_time - end_time, units = attr(aggregationInstructions, "units")))) 
+                                flow_time == "idle_time" ~ as.double(next_start_time - end_time, units = attr(aggregationInstructions, "units"))))
     temp <- temp %>%
         group_by(act, from_id, next_act, to_id) %>%
         summarize(aggr = aggregationInstructions(time)) %>%
         ungroup() %>%
         mutate(tempCol = aggr) %>%
-        na.omit() 
-    
-    temp <- left_join(edges[,c("act", "next_act")], temp) 
+        na.omit()
+
+    temp <- left_join(edges[,c("act", "next_act")], temp)
     temp <- select(temp, tempCol)
     colnames(temp)<-c(attr(aggregationInstructions, "columnName"))
     return(temp)
@@ -102,8 +102,8 @@ edges_frequency <- function(precedence, aggregationInstructions, edges) {
         ungroup() %>%
         mutate(tempCol = case_when(aggregationInstructions == "relative" ~ round(100*n/sum(n),2),
                                    aggregationInstructions == "absolute" ~ n)) %>%
-        na.omit() 
-    temp <- left_join(edges[,c("act", "next_act")], temp) 
+        na.omit()
+    temp <- left_join(edges[,c("act", "next_act")], temp)
     temp <- select(temp, tempCol)
     colnames(temp)<-c(attr(aggregationInstructions, "columnName"))
     return(temp)
@@ -114,14 +114,20 @@ edges_columnAgregate <- function(precedence, aggregationInstructions) {
     columnNamex <- paste0("^",columnName,".x$")
     columnNamey <- paste0("^",columnName,".y$")
     edgeOperation <- attr(aggregationInstructions, "edgeOperation")
-    
+
     columnValues <- precedence %>%
-        select(act, aid, columnName) 
-    
+        select(act, aid, columnName)
+
     p <- precedence %>%
         inner_join(columnValues, by = c( "case" = "case","next_act" = "act", "next_aid" = "aid")) #
     names(p) <- sub(columnNamex, "aggrFirst", names(p))
     names(p) <- sub(columnNamey, "aggrSecond", names(p))
+    if (is.factor(p$aggrFirst)){
+    	p$aggrFirst <- as.numeric(levels(p$aggrFirst))[p$aggrFirst]
+    }
+    if (is.factor(p$aggrSecond)){
+    	p$aggrSecond <- as.numeric(levels(p$aggrSecond))[p$aggrSecond]
+    }
     p$calcColumn <- case_when(
         edgeOperation == "mean" ~  as.double(rowMeans(data.frame(p$aggrFirst,p$aggrSecond))),
         edgeOperation == "min" ~  as.double(do.call(pmin, data.frame(p$aggrFirst,p$aggrSecond))),
@@ -132,7 +138,7 @@ edges_columnAgregate <- function(precedence, aggregationInstructions) {
         edgeOperation == "to" ~  as.double(p$aggrSecond),
         TRUE ~  as.double(rowMeans(data.frame(p$aggrFirst,p$aggrSecond)))
     )
-    
+
     temp <- p %>%
         ungroup() %>%
         group_by(act, from_id, next_act, to_id) %>%
@@ -157,7 +163,7 @@ nodes_performance <- function(nodes, precedence, aggregationInstructions) {
         na.omit() %>%
         select(act,tempCol)
     #@nog niet mooi
-    temp <- left_join(nodes, temp, by = c("activity_name" = "act")) 
+    temp <- left_join(nodes, temp, by = c("activity_name" = "act"))
     temp <- select(temp, tempCol)
     colnames(temp)<-c(attr(aggregationInstructions, "columnName"))
     return(temp)
@@ -172,7 +178,7 @@ nodes_frequency <- function(nodes, precedence, aggregationInstructions) {
                                    aggregationInstructions == "absolute" ~ n)) %>%
         na.omit() %>%
         select(act,tempCol)
-    temp <- left_join(nodes, temp, by = c("activity_name" = "act")) 
+    temp <- left_join(nodes, temp, by = c("activity_name" = "act"))
     temp <- select(temp, tempCol)
     colnames(temp)<-c(attr(aggregationInstructions, "columnName"))
     return(temp)
@@ -181,6 +187,9 @@ nodes_frequency <- function(nodes, precedence, aggregationInstructions) {
 
 nodes_columnAgregate <- function(nodes, precedence, aggregationInstructions) {
     names(precedence) <- sub(attr(aggregationInstructions, "columnNameIn"), "aggrCol", names(precedence))
+    if (is.factor(precedence$aggrCol)){
+    	precedence$aggrCol <- as.numeric(levels(precedence$aggrCol))[precedence$aggrCol]
+    }
     if (!is.numeric( precedence$aggrCol )){
         stop(paste0("The column: ",attr(aggregationInstructions, "columnNameIn"), " is not numerical."))
     }
@@ -196,7 +205,7 @@ nodes_columnAgregate <- function(nodes, precedence, aggregationInstructions) {
         na.omit() %>%
         select(act,tempCol)
 #@nog niet mooi
-    temp <- left_join(nodes, temp, by = c("activity_name" = "act")) 
+    temp <- left_join(nodes, temp, by = c("activity_name" = "act"))
     temp <- select(temp, tempCol)
     colnames(temp)<-c(attr(aggregationInstructions, "columnNameOut"))
     return(temp)
@@ -216,7 +225,7 @@ GetBasePrecedence<-function(base_log,eventlog){
         ungroup() %>%
         count(act) %>%
         mutate(node_id = 1:n()) -> base_nodes
-    
+
 suppressWarnings(base_log %>%
                      ungroup() %>%
                      mutate(act = ordered(act
@@ -238,18 +247,18 @@ suppressWarnings(base_log %>%
 getNodesAggregation <- function(aggregationInstruction,nodes,base_precedence)
 {
     perspective <- attr(aggregationInstruction, "perspective")
-    if(perspective == "frequency") 
+    if(perspective == "frequency")
         nodes_frequency(nodes, base_precedence, aggregationInstruction)
-    else if(perspective == "performance") 
+    else if(perspective == "performance")
         nodes_performance(nodes, base_precedence, aggregationInstruction)
-    else if(perspective == "columnAgregate") 
+    else if(perspective == "columnAgregate")
         nodes_columnAgregate(nodes, base_precedence, aggregationInstruction)
 }
 
 getEdgesAggregation <- function(aggregationInstruction,base_precedence, edges)
 {
     perspective <- attr(aggregationInstruction, "perspective")
-    if(perspective == "frequency") 
+    if(perspective == "frequency")
         edges_frequency(base_precedence, aggregationInstruction, edges)
     else if(perspective == "performance")
         edges_performance(base_precedence, aggregationInstruction, edges)
@@ -262,7 +271,7 @@ enriched_process_map <- function(eventlog , aggregationInstructions =  list(freq
         base_precedence<- GetBasePrecedence(base_log,eventlog = eventlog)
         nodes<-GetBasicNodes(base_precedence)
         edges<-GetBasicEdges(base_precedence)
-    
+
 
         create_node_df(n = nrow(nodes),
                        label = nodes$activity_name,
@@ -274,22 +283,22 @@ enriched_process_map <- function(eventlog , aggregationInstructions =  list(freq
                        fontname = "Arial") -> nodes_df
         aggregatedColumns<-as.data.table(lapply(aggregationInstructions,getNodesAggregation,nodes,base_precedence))
         #aggregatedColumns$activity_name <- nodes$activity_name
-        
+
         nodes_df <- cbind(nodes_df, aggregatedColumns)
         nodes_df$activity_name <- nodes_df$label
-        
+
         min_level <- min(nodes_df$color_level)
         max_level <- max(nodes_df$color_level[nodes_df$color_level < Inf])
-        
+
         create_edge_df(from = edges$from_id,
                        to = edges$to_id,
                        label = edges$label,
                        penwidth = edges$penwidth,
                        fontname = "Arial") -> edges_df
-        
+
         aggregatedEdges<-as.data.table(lapply(aggregationInstructions, getEdgesAggregation, base_precedence, edges))
         edges_df <- cbind(edges_df, aggregatedEdges)
-        
+
         create_graph(nodes_df, edges_df)  %>%
             add_global_graph_attrs(attr = "rankdir", value = "TB",attr_type = "graph") %>%
             add_global_graph_attrs(attr = "layout", value = "dot", attr_type = "graph") %>%
@@ -307,4 +316,3 @@ if_start <- function(node, true, false) {
     ifelse(node %in% c("Start"), true, false)
 }
 
-    
