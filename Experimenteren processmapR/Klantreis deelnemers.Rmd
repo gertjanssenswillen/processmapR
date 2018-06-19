@@ -1,0 +1,87 @@
+---
+title: "Klantreis deelnemers"
+author: "Willem Feijen"
+date: "8 juni 2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE, warning=F, error=F, message=F}
+#Initialisatie Let op de slashes / staan anders dan Windows ze zet \.
+eventLogName <- "W:/Uitbreiden_ProcessMap/MijnJourney format Whatsapp voor Disco v 15 mei csv.csv"
+#eventLogName <- "W:/Uitbreiden_ProcessMap/Motivation.csv"
+```
+
+
+
+```{r echo=FALSE, warning=F, error=F, message=F}
+library(bupaR)
+library(edeaR)
+library(processmonitR)
+library(plotluck)
+library(DiagrammeR)
+library(data.table)
+#library(DiagrammeRsvg)
+
+csvLog<-read.table(eventLogName,header = TRUE, sep = ";",na = c("n.v.t.","onbekend",""))
+csvLog$status = "complete"
+csvLog$activity_instance = 1:nrow(csvLog)
+csvLog$timestamp<-as.POSIXct(strptime(csvLog$Timestamp, "%d-%m-%Y"))
+
+
+kolomNamen<-colnames(csvLog)
+csvLog$activity_instance = 1:nrow(csvLog)
+csvLog$status<-"start"
+csvLog$SentimentGem <- as.numeric(csvLog$Waardering)
+```
+
+
+```{r echo=FALSE, warning=F, error=F, message=F}
+#Gevonden kolomkoppen:
+#colnames(csvLog)
+```
+
+
+```{r echo=FALSE, warning=F, error=F, message=F}
+#Omzetten naar een processmining Log 
+if (!("Werknemer" %in% colnames(csvLog))){csvLog$Werknemer<-NA}
+eventLog.Base<-eventlog(csvLog,
+        case_id = "Voornaam",
+        activity_id = "Mapping",
+        activity_instance_id = "activity_instance",
+        lifecycle_id = "status",
+        timestamp = "timestamp",
+        resource_id = "SentimentGem"
+    )
+```
+# Map met SentimentGem
+
+De getallen en de kleuren in de activiteiten geven het gemiddelde sentiment weer.
+De getallen, kleuren en dikte van de lijnen geven het aantal malen weer dat dat pad doorlopen is.
+```{r echo=FALSE, warning=F, error=F, message=F}
+fileName <- "SentimentGem"
+agregationInst = list( enriched_frequency(value = "absolute", columnName = "aantal"),enriched_column_aggregate( FUN = mean, columnNameIn = "SentimentGem", columnNameOut = "SentimentGem", edgeOperation = "to") )
+map<-enriched_process_map(eventLog.Base, aggregationInstructions = agregationInst )
+map <- map %>%
+    processmapR::color_activities( column = "SentimentGem",
+                      colorCaption = "black",
+                      colorUpperbound = "darkseagreen1",
+                      colorLowerbound = "lightsalmon1") %>%
+    label_activities(columns =c("activity_name","SentimentGem")) %>%
+    color_transitions(column = "aantal",
+          colorCaption = "black",
+          colorUpperbound = "gray0",
+          colorLowerbound = "gray50") %>%
+    label_transitions(columns = c("aantal")) 
+
+x<- get_node_df(map)
+
+map %>% export_graph(file_name = "Z:/Dump/SentimentGem.svg",  file_type = "SVG")
+```
+![](`r "Z:/Dump/SentimentGem.svg"`)
+```{r}
+
+```
